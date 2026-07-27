@@ -219,7 +219,10 @@ export const Store = {
         deleteDoc: fsM.deleteDoc, onSnapshot: fsM.onSnapshot,
         GoogleAuthProvider: authM.GoogleAuthProvider, signInWithPopup: authM.signInWithPopup,
         signInWithRedirect: authM.signInWithRedirect, getRedirectResult: authM.getRedirectResult,
-        onAuthStateChanged: authM.onAuthStateChanged, signOut: authM.signOut
+        onAuthStateChanged: authM.onAuthStateChanged, signOut: authM.signOut,
+        signInWithEmailAndPassword: authM.signInWithEmailAndPassword,
+        createUserWithEmailAndPassword: authM.createUserWithEmailAndPassword,
+        sendPasswordResetEmail: authM.sendPasswordResetEmail
       };
       M.getRedirectResult(auth).catch(() => {});
       return { cloud: true };
@@ -257,6 +260,21 @@ export const Store = {
       }
       throw e;
     }
+  },
+
+  // Email + password — the same provider EZ Money uses, so signing in with the
+  // same credentials lands on the same Firebase uid.
+  signInEmail(email, pw) {
+    if (!M) throw new Error('Cloud not configured');
+    return M.signInWithEmailAndPassword(auth, String(email).trim(), pw);
+  },
+  signUpEmail(email, pw) {
+    if (!M) throw new Error('Cloud not configured');
+    return M.createUserWithEmailAndPassword(auth, String(email).trim(), pw);
+  },
+  resetPassword(email) {
+    if (!M) throw new Error('Cloud not configured');
+    return M.sendPasswordResetEmail(auth, String(email).trim());
   },
 
   async signOut() {

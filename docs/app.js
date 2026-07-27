@@ -361,18 +361,77 @@ function showApp() {
   render();
 }
 
+const gateMsg = (el, text) => {
+  const err = $('gateErr'), ok = $('gateOk');
+  err.classList.add('hidden'); ok.classList.add('hidden');
+  if (!text) return;
+  el.textContent = text;
+  el.classList.remove('hidden');
+};
+
+function authError(e) {
+  switch (e.code) {
+    case 'auth/unauthorized-domain':
+      return `This domain isn't authorised in Firebase yet. Add "${location.hostname}" under Authentication → Settings → Authorized domains.`;
+    case 'auth/invalid-credential':
+    case 'auth/wrong-password':
+    case 'auth/user-not-found':
+      return 'That email and password don\'t match an account. Check them, or use "Create account" if this is your first time here.';
+    case 'auth/invalid-email': return 'That doesn\'t look like a valid email address.';
+    case 'auth/email-already-in-use': return 'That email already has an account — just sign in instead.';
+    case 'auth/weak-password': return 'Password needs to be at least 6 characters.';
+    case 'auth/too-many-requests': return 'Too many attempts. Wait a minute and try again.';
+    case 'auth/network-request-failed': return 'No connection to Firebase. Check your internet and try again.';
+    case 'auth/operation-not-allowed': return 'Email/password sign-in is turned off for this Firebase project. Enable it under Authentication → Sign-in method.';
+    default: return e.message || 'Sign-in failed';
+  }
+}
+
+const creds = () => [$('gateEmail').value.trim(), $('gatePw').value];
+
+$('gateForm').onsubmit = async e => {
+  e.preventDefault();
+  const btn = $('signInEmailBtn');
+  const [email, pw] = creds();
+  btn.disabled = true;
+  gateMsg(null, '');
+  try {
+    await Store.signInEmail(email, pw);
+  } catch (err) {
+    gateMsg($('gateErr'), authError(err));
+  } finally { btn.disabled = false; }
+};
+
+$('signUpBtn').onclick = async () => {
+  const [email, pw] = creds();
+  if (!email || !pw) return gateMsg($('gateErr'), 'Type an email and password first, then tap Create account.');
+  if (!confirm(`Create a brand new account for ${email}?\n\nIf you already use this email for EZ Money, tap Cancel and use Sign in instead.`)) return;
+  try {
+    await Store.signUpEmail(email, pw);
+  } catch (err) {
+    gateMsg($('gateErr'), authError(err));
+  }
+};
+
+$('forgotBtn').onclick = async () => {
+  const [email] = creds();
+  if (!email) return gateMsg($('gateErr'), 'Type your email above first, then tap Forgot password.');
+  try {
+    await Store.resetPassword(email);
+    gateMsg($('gateOk'), `Reset link sent to ${email}. Check your inbox.`);
+  } catch (err) {
+    gateMsg($('gateErr'), authError(err));
+  }
+};
+
 $('signInBtn').onclick = async () => {
   const btn = $('signInBtn');
   btn.disabled = true;
-  $('gateErr').classList.add('hidden');
+  gateMsg(null, '');
   try {
     await Store.signIn();
   } catch (e) {
-    const msg = e.code === 'auth/unauthorized-domain'
-      ? `This domain isn't authorised in Firebase yet. Add "${location.hostname}" under Authentication → Settings → Authorized domains.`
-      : (e.message || 'Sign-in failed');
-    $('gateErr').textContent = msg;
-    $('gateErr').classList.remove('hidden');
+    gateMsg($('gateErr'), authError(e));
   } finally { btn.disabled = false; }
 };
 

@@ -21,8 +21,8 @@ Sections: **FAO Career** 🌾 · **Content Creator** 🎬 · **Billing & Docs** 
   finished day into its history, and shows a 🔥 streak with a 7-day dot strip.
 - Per-section stats (open / done today / % complete), Open·Done·All filter, and search
   across titles, notes and subtasks.
-- **Cloud sync** — sign in with Google and the same data appears on your phone and PC.
-  Works offline; changes queue and sync when signal returns.
+- **Cloud sync** — sign in (email + password, or Google) and the same data appears on your
+  phone and PC. Works offline; changes queue and sync when signal returns.
 - **PWA** — installable on Android, iPhone and desktop, opens fullscreen.
 
 ## Two ways to run it

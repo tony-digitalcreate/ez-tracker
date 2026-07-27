@@ -242,9 +242,32 @@ main { max-width: 980px; margin: 0 auto; padding: 1.2rem 1.6rem 0; }
   font-size: .84rem; color: var(--ink-faint); font-weight: 600; cursor: pointer; padding: .5rem;
 }
 .btn-ghost-link:hover { color: var(--blue); }
+.gate-form { display: flex; flex-direction: column; gap: .5rem; }
+.gate-form input { padding: .7rem .8rem; font-size: .95rem; }
+.btn-wide { width: 100%; padding: .7rem 1rem; font-size: .95rem; }
+.gate-links {
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  margin-top: .6rem; font-size: .8rem;
+}
+.gate-links .dot { color: var(--ink-faint); }
+.linkish {
+  font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer;
+  border: none; background: none; color: var(--ink-soft); padding: .2rem;
+}
+.linkish:hover { color: var(--blue); text-decoration: underline; }
+.gate-or {
+  display: flex; align-items: center; gap: .7rem;
+  margin: 1rem 0 .9rem; color: var(--ink-faint); font-size: .76rem; font-weight: 700;
+}
+.gate-or::before, .gate-or::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 .gate-err {
   margin-top: 1rem; font-size: .82rem; line-height: 1.45;
   background: var(--red-soft); color: var(--red);
+  border-radius: 10px; padding: .7rem .85rem; text-align: left;
+}
+.gate-ok {
+  margin-top: 1rem; font-size: .82rem; line-height: 1.45;
+  background: var(--green-soft); color: var(--green);
   border-radius: 10px; padding: .7rem .85rem; text-align: left;
 }
 
