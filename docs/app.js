@@ -389,6 +389,10 @@ function authError(e) {
 
 const creds = () => [$('gateEmail').value.trim(), $('gatePw').value];
 
+// remember the address between sign-ins — installed PWAs don't always get the
+// browser's autofill, so this saves retyping it on the phone
+$('gateEmail').value = localStorage.getItem('eztr-email') || '';
+
 $('gateForm').onsubmit = async e => {
   e.preventDefault();
   const btn = $('signInEmailBtn');
@@ -397,6 +401,7 @@ $('gateForm').onsubmit = async e => {
   gateMsg(null, '');
   try {
     await Store.signInEmail(email, pw);
+    localStorage.setItem('eztr-email', email);
   } catch (err) {
     gateMsg($('gateErr'), authError(err));
   } finally { btn.disabled = false; }
@@ -408,6 +413,7 @@ $('signUpBtn').onclick = async () => {
   if (!confirm(`Create a brand new account for ${email}?\n\nIf you already use this email for EZ Money, tap Cancel and use Sign in instead.`)) return;
   try {
     await Store.signUpEmail(email, pw);
+    localStorage.setItem('eztr-email', email);
   } catch (err) {
     gateMsg($('gateErr'), authError(err));
   }
