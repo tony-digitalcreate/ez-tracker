@@ -63,7 +63,7 @@ function renderTabs() {
     const open = tasksOf(s.id).filter(isOpen).length;
     return `<button class="tab${s.id === activeSection ? ' active' : ''}" data-sec="${s.id}">
       <span>${esc(s.icon || '')} ${esc(s.name)}</span>
-      <span class="n${open ? '' : ' zero'}">${open}</span>
+      ${open ? `<span class="n">${open}</span>` : ''}
     </button>`;
   }).join('');
   $('tabs').querySelectorAll('.tab').forEach(b => b.onclick = () => {
@@ -73,6 +73,11 @@ function renderTabs() {
     $('search').value = '';
     render();
   });
+  // on phones the strip scrolls sideways — keep the active tab in view
+  const on = $('tabs').querySelector('.tab.active');
+  if (on && $('tabs').scrollWidth > $('tabs').clientWidth) {
+    on.scrollIntoView({ block: 'nearest', inline: 'center' });
+  }
 }
 
 function renderHero() {

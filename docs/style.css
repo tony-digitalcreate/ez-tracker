@@ -307,15 +307,60 @@ main { max-width: 980px; margin: 0 auto; padding: 1.2rem 1.6rem 0; }
   .sec-hero { gap: .8rem; }
   .subs { margin-left: .5rem; }
   .tagline { display: none; }
-  .tabs { order: 3; width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: .2rem; }
-  .tab { white-space: nowrap; flex: none; }
+
+  /* Tab strip gets its own full-width row and scrolls sideways.
+     flex-basis must be 100% — the base `flex: 1` sets basis 0, which
+     beats `width` on a flex item and collapses the strip to nothing. */
+  .tabs {
+    order: 3; flex: 0 0 100%; max-width: 100%;
+    overflow-x: auto; overflow-y: hidden;
+    flex-wrap: nowrap; gap: .3rem;
+    margin-top: .15rem; padding-bottom: .15rem;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    white-space: nowrap; flex: 0 0 auto;
+    scroll-snap-align: start;
+    padding: .55rem .75rem; font-size: .88rem;
+  }
+
+  /* Actions drop to their own row so the title gets the full card width.
+     The basis must leave room for the checkbox AND its gap, or the title
+     wraps below and strands the checkbox on a line of its own. */
+  .task-top { flex-wrap: wrap; }
+  .task-main { flex: 1 1 calc(100% - 2.6rem); }
+  .task-actions {
+    flex: 0 0 100%; justify-content: flex-end; gap: 0;
+    margin-top: .5rem; padding-top: .35rem;
+    border-top: 1px dashed var(--rule);
+  }
+  .task-actions .btn-ghost { min-width: 44px; height: 40px; padding: 0; font-size: 1.05rem; }
+  .task-title { font-size: 1rem; line-height: 1.35; }
+
+  /* Add-card in two rows: title + button, then due + daily */
+  .add-card { padding: .9rem 1rem; }
+  .add-card .row { row-gap: .5rem; }
+  #newTitle { flex: 1 1 58%; min-width: 0; order: 1; }
+  #addTaskBtn { order: 2; flex: 0 0 auto; }
+  .date-field { order: 3; }
+  .daily-toggle { order: 4; }
+  .add-card .hint { margin-top: .45rem; }
+
   /* thumb-friendly tap targets */
   .task-check { width: 24px; height: 24px; }
   .sub-row input[type="checkbox"] { width: 22px; height: 22px; }
-  .sub-row { padding: .4rem 0; }
-  .sub-x { opacity: .5; }
-  .task-actions { gap: 0; }
-  .task-actions .btn-ghost { min-width: 40px; height: 40px; padding: 0; font-size: 1.05rem; }
+  /* Give the subtask text a floor so it wraps instead of being squeezed into
+     a column. The ✕ leaves the flow and pins top-right, otherwise it gets
+     bumped onto a line of its own once the text wraps. */
+  .sub-row { padding: .4rem 2rem .4rem 0; flex-wrap: wrap; row-gap: .1rem; position: relative; }
+  .sub-text { flex: 1 1 60%; line-height: 1.35; }
+  .sub-date { margin-left: auto; }
+  .sub-date ~ .sub-date { margin-left: .4rem; }
+  .sub-x { position: absolute; right: -.35rem; top: .25rem; opacity: .5; }
   .sub-add { flex-wrap: wrap; }
-  .sub-add input[type="date"] { width: 120px; }
+  .sub-add input[type="text"] { flex: 1 1 100%; }
+  .sub-add input[type="date"] { flex: 1 1 auto; width: auto; }
 }
