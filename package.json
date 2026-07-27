@@ -1,0 +1,12 @@
+{
+  "name": "ez-tracker",
+  "version": "1.0.0",
+  "description": "EZ Tracker - daily routine & task tracker split into life sections, notebook-paper theme",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

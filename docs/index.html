@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>EZ Tracker</title>
+<link rel="icon" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EZ Tracker">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="firebase-config.js"></script>
+</head>
+<body>
+
+<!-- ================= sign-in gate ================= -->
+<div class="gate" id="gate">
+  <div class="gate-card card">
+    <div class="brand-mark big">
+      <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4.5 12.5 L9.5 17.5 L19.5 6.5"/>
+      </svg>
+    </div>
+    <h1 class="gate-title">EZ TRACKER</h1>
+    <div class="gate-tag">tick it. every day.</div>
+    <p class="gate-copy">Sign in with Google to sync your tasks between this phone and your PC. Your data is stored under your account only.</p>
+
+    <button class="btn btn-google" id="signInBtn">
+      <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.7-2 5-4.4 6.6v5.5h7.1c4.2-3.8 6.6-9.5 6.6-16.1z"/><path fill="#34A853" d="M24 46c6 0 11-2 14.6-5.4l-7.1-5.5c-2 1.3-4.5 2.1-7.5 2.1-5.8 0-10.6-3.9-12.4-9.1H4.3v5.7C7.9 41.1 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.6 28.1c-.5-1.3-.7-2.7-.7-4.1s.3-2.8.7-4.1v-5.7H4.3C2.8 17.1 2 20.5 2 24s.8 6.9 2.3 9.8l7.3-5.7z"/><path fill="#EA4335" d="M24 10.8c3.3 0 6.2 1.1 8.5 3.3l6.3-6.3C35 4.2 30 2 24 2 15.4 2 7.9 6.9 4.3 14.2l7.3 5.7c1.8-5.2 6.6-9.1 12.4-9.1z"/></svg>
+      Sign in with Google
+    </button>
+    <button class="btn btn-ghost-link" id="offlineBtn">Use this device only (no sync)</button>
+    <div class="gate-err hidden" id="gateErr"></div>
+  </div>
+</div>
+
+<!-- ================= app ================= -->
+<div id="app" class="hidden">
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4.5 12.5 L9.5 17.5 L19.5 6.5"/>
+      </svg>
+    </div>
+    <div>
+      <h1>EZ TRACKER</h1>
+      <div class="tagline">tick it. every day.</div>
+    </div>
+  </div>
+
+  <nav class="tabs" id="tabs"></nav>
+
+  <div class="row topbar-right">
+    <span class="cloudstat off" id="cloudStat">☁ local only</span>
+    <button class="btn btn-sm" id="menuBtn" title="Backup, import, sign out">⋯</button>
+  </div>
+</header>
+
+<main>
+  <div class="card sec-hero" id="secHero"></div>
+
+  <div class="add-card card">
+    <div class="row wrap">
+      <input type="text" id="newTitle" class="grow" placeholder="New task…" autocomplete="off" enterkeyhint="done">
+      <label class="date-field">Due
+        <input type="date" id="newDue">
+      </label>
+      <label class="daily-toggle" title="Resets its boxes every day and counts a streak">
+        <input type="checkbox" id="newDaily"> 🔁 Daily
+      </label>
+      <button class="btn btn-blue" id="addTaskBtn">＋ Add task</button>
+    </div>
+    <div class="hint">Tasks record the day you created them. Add subtasks inside a task and tick them off as you go.</div>
+  </div>
+
+  <div class="row wrap tools">
+    <div class="filters" id="filters">
+      <button class="fchip on" data-filter="active">Open</button>
+      <button class="fchip" data-filter="done">Done</button>
+      <button class="fchip" data-filter="all">All</button>
+    </div>
+    <input type="search" id="search" class="grow" placeholder="🔍 Search tasks &amp; subtasks in this section…">
+  </div>
+
+  <div id="taskList"></div>
+</main>
+</div>
+
+<!-- ================= menu sheet ================= -->
+<div class="modal-bg hidden" id="menuBg">
+  <div class="modal card">
+    <h2 id="menuWho">Account</h2>
+    <div class="menu-list">
+      <button class="menu-item" id="exportBtn">⬇ Download a backup (.json)</button>
+      <button class="menu-item" id="importBtn">📥 Import a backup</button>
+      <button class="menu-item" id="signOutBtn">🚪 Sign out</button>
+      <button class="menu-item" id="menuClose">✕ Close</button>
+    </div>
+    <input type="file" id="importFile" accept="application/json,.json" class="hidden">
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

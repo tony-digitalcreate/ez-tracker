@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EZ Tracker</title>
+<link rel="icon" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4.5 12.5 L9.5 17.5 L19.5 6.5"/>
+      </svg>
+    </div>
+    <div>
+      <h1>EZ TRACKER</h1>
+      <div class="tagline">tick it. every day.</div>
+    </div>
+  </div>
+
+  <nav class="tabs" id="tabs"></nav>
+
+  <div class="row">
+    <a class="btn btn-sm" href="/api/export" title="Download a JSON backup">⬇ Backup</a>
+  </div>
+</header>
+
+<main>
+  <div class="card sec-hero" id="secHero"></div>
+
+  <div class="add-card card">
+    <div class="row wrap">
+      <input type="text" id="newTitle" class="grow" placeholder="New task… (e.g. Finish the MEAL report)" autocomplete="off">
+      <label class="date-field">Due
+        <input type="date" id="newDue">
+      </label>
+      <label class="daily-toggle" title="Resets its boxes every day and counts a streak">
+        <input type="checkbox" id="newDaily"> 🔁 Daily
+      </label>
+      <button class="btn btn-blue" id="addTaskBtn">＋ Add task</button>
+    </div>
+    <div class="hint">Tasks record the day you created them. Add subtasks inside a task and tick them off as you go.</div>
+  </div>
+
+  <div class="row wrap tools">
+    <div class="filters" id="filters">
+      <button class="fchip on" data-filter="active">Open</button>
+      <button class="fchip" data-filter="done">Done</button>
+      <button class="fchip" data-filter="all">All</button>
+    </div>
+    <input type="search" id="search" class="grow" placeholder="🔍 Search tasks &amp; subtasks in this section…">
+  </div>
+
+  <div id="taskList"></div>
+</main>
+
+<div class="toast hidden" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

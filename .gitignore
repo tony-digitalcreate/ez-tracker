@@ -1,0 +1,4 @@
+node_modules/
+# personal task data never leaves this PC — the cloud copy lives in Firestore
+data/
+*.log

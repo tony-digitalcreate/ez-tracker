@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- EZ Money (existing — keep this block) --------------------------
+    match /ezMoney/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+      match /tx/{txId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+
+    // ---- EZ Tracker (new) ------------------------------------------------
+    // Own top-level collection, so nothing EZ Money owns is affected.
+    // Only the signed-in account can touch its own tree.
+    match /ezTracker/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+      match /tasks/{taskId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+  }
+}
